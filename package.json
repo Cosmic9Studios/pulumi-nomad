@@ -1,5 +1,5 @@
 {
-  "name": "@c9s/pulumi-nomad",
+  "name": "@cosmic9studios/pulumi-nomad",
   "version": "0.0.1",
   "description": "A module for running a nomad job",
   "dependencies": {
