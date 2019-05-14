@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://github.com/Cosmic9Studios/pulumi-nomad.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["pulumi", "nomad", "job", "terraform", "hashicorp"],
+  "author": "Cosmic9 Studios",
   "license": "ISC"
 }
