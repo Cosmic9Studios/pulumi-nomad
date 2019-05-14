@@ -1,5 +1,15 @@
 stages:
+  - build
   - stamp
+
+build: 
+  image: node:10.15.3-alpine
+  stage: build
+  script:
+    - npm install
+    - npx tsc
+  artifacts:
+    untracked: true
 
 stamp:
   image: docker:git
@@ -8,7 +18,7 @@ stamp:
   stage: stamp
   before_script:
     - apk add --update nodejs nodejs-npm
-    - npm install -g semantic-release@15 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/npm
+    - npm install -g semantic-release@15 @semantic-release/commit-analyzer @semantic-release/npm
   script:
     - npx semantic-release -r https://github.com/Cosmic9Studios/pulumi-nomad.git
   except: 
