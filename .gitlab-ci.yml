@@ -1,0 +1,23 @@
+
+
+variables: 
+  REGISTRY: registry.gitlab.com
+  CONTAINER_RELEASE_IMAGE: $REGISTRY/cosmic9studios/assetstore/web
+
+stages:
+  - stamp
+
+stamp:
+  image: docker:git
+  services:
+  - docker:dind
+  stage: stamp
+  before_script:
+    - apk add --update nodejs nodejs-npm
+    - npm install -g semantic-release@15 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/npm
+  script:
+    - npx semantic-release
+  except: 
+    - tags
+  only: 
+    - master
