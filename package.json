@@ -1,6 +1,6 @@
 {
   "name": "@c9s/pulumi-nomad",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A module for running a nomad job",
   "dependencies": {
     "@pulumi/pulumi": "latest",
@@ -17,6 +17,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Cosmic9Studios/pulumi-nomad.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": ["pulumi", "nomad", "job", "terraform", "hashicorp"],
   "author": "Cosmic9 Studios",
