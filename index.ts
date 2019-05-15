@@ -2,7 +2,7 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import axios from 'axios';
-import axiosRetry from 'axios-retry';
+import axiosRetry, { exponentialDelay } from 'axios-retry';
 
 interface NomadJobInputs {
     address: string, 
@@ -41,7 +41,7 @@ async function runJob(inputs: NomadJobInputs) {
     const hclJob = makeTemplate(inputs.hclJob, inputs.vars);
     const address = inputs.address;
 
-    axiosRetry(axios, { retries: inputs.retryCount || 3 });
+    axiosRetry(axios, { retries: inputs.retryCount || 3, retryDelay: exponentialDelay });
     const parseResponse = await axios.post(`${address}/v1/jobs/parse`, {JobHCL: hclJob});
     await axios.post(`${address}/v1/jobs`, { Job: parseResponse.data });
 
