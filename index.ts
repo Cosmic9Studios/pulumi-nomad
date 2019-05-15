@@ -2,16 +2,17 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
 interface NomadJobInputs {
     address: string, 
     hclJob: string,
-    vars: Object
+    vars: Object,
+    retryCount?: number
 };
 
 const nomadJobProvider: pulumi.dynamic.ResourceProvider = {
     async create(inputs: NomadJobInputs) {
-        pulumi.log.info("RUnning job ");
         const id = await runJob(inputs);
         
         return { 
@@ -40,6 +41,7 @@ async function runJob(inputs: NomadJobInputs) {
     const hclJob = makeTemplate(inputs.hclJob, inputs.vars);
     const address = inputs.address;
 
+    axiosRetry(axios, { retries: inputs.retryCount || 3 });
     const parseResponse = await axios.post(`${address}/v1/jobs/parse`, {JobHCL: hclJob});
     await axios.post(`${address}/v1/jobs`, { Job: parseResponse.data });
 
