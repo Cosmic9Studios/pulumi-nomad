@@ -41,7 +41,17 @@ async function runJob(inputs: NomadJobInputs) {
     const hclJob = makeTemplate(inputs.hclJob, inputs.vars);
     const address = inputs.address;
 
-    axiosRetry(axios, { retries: inputs.retryCount || 3, retryDelay: exponentialDelay });
+    axiosRetry(axios, { 
+        retries: inputs.retryCount || 3, 
+        retryDelay: exponentialDelay,
+        retryCondition: (err) => {
+            if (err) {
+                return true;
+            }
+            return false;
+        }
+    });
+
     const parseResponse = await axios.post(`${address}/v1/jobs/parse`, {JobHCL: hclJob});
     await axios.post(`${address}/v1/jobs`, { Job: parseResponse.data });
 
