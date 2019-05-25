@@ -17,24 +17,23 @@ const nomadJobProvider: pulumi.dynamic.ResourceProvider = {
         
         return { 
             id,
-            outs: {}
+            outs: inputs
         };
     },
-}
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
+    async update(id, olds: NomadJobInputs, news: NomadJobInputs) {
+        await runJob(news);
+        return {
+            id,
+            outs: news
+        }
+    } 
+}
 
 export default class NomadJob extends pulumi.dynamic.Resource {
     constructor(name: string, args: NomadJobInputs, opts?: pulumi.CustomResourceOptions) {
         super(nomadJobProvider, name, args, opts);
     }
-}
-
-function makeTemplate(templateString: string, templateVariables: object) {
-	const keys = Object.keys(templateVariables);
-	const values = Object.values(templateVariables);
-	let templateFunction = new Function(...keys, `return \`${templateString}\`;`);
-	return templateFunction(...values);
 }
 
 async function runJob(inputs: NomadJobInputs) {
@@ -56,4 +55,11 @@ async function runJob(inputs: NomadJobInputs) {
     await axios.post(`${address}/v1/jobs`, { Job: parseResponse.data });
 
     return parseResponse.data.ID;
+}
+
+function makeTemplate(templateString: string, templateVariables: object) {
+	const keys = Object.keys(templateVariables);
+	const values = Object.values(templateVariables);
+	let templateFunction = new Function(...keys, `return \`${templateString}\`;`);
+	return templateFunction(...values);
 }
